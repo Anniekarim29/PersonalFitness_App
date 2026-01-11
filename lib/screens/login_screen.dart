@@ -58,7 +58,7 @@ class LoginScreen extends StatelessWidget {
                   child: Text(
                     "Welcome to\nFitnessa",
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.outfit(
+                    style: GoogleFonts.poppins(
                       fontSize: 40,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -75,7 +75,7 @@ class LoginScreen extends StatelessWidget {
                   child: Text(
                     "Get started with Fitnessa\npersonal trainers at your doorstep.",
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.outfit(
+                    style: GoogleFonts.poppins(
                       fontSize: 16,
                       color: Colors.white70,
                     ),
@@ -126,7 +126,7 @@ class LoginScreen extends StatelessWidget {
                           ),
                           child: Text(
                             "Login",
-                            style: GoogleFonts.outfit(
+                            style: GoogleFonts.poppins(
                               fontSize: 18,
                               color: const Color(0xFFFF0040),
                               fontWeight: FontWeight.w600,
@@ -148,7 +148,7 @@ class LoginScreen extends StatelessWidget {
                           ),
                           child: Text(
                             "Sign Up",
-                            style: GoogleFonts.outfit(
+                            style: GoogleFonts.poppins(
                               fontSize: 18,
                               color: Colors.white,
                               fontWeight: FontWeight.w600,

@@ -2,8 +2,73 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:animate_do/animate_do.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late PageController _pageController;
+  int _currentPage = 0;
+
+  final List<Map<String, dynamic>> _workouts = [
+    {
+      "title": "Full Body\nDestroyer",
+      "subtitle": "45 Min • High Intensity",
+      "image": "assets/background.jpg",
+      "color": const Color(0xFFFF0040),
+    },
+    {
+      "title": "Cardio\nBlast",
+      "subtitle": "30 Min • Endurance",
+      "image": "assets/background.jpg",
+      "color": Colors.blueAccent,
+    },
+    {
+      "title": "Strength\nMaster",
+      "subtitle": "60 Min • Power",
+      "image": "assets/background.jpg",
+      "color": Colors.orangeAccent,
+    },
+    {
+      "title": "Yoga\nFlow",
+      "subtitle": "40 Min • Flexibility",
+      "image": "assets/background.jpg",
+      "color": Colors.purpleAccent,
+    },
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: 0, viewportFraction: 0.7);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _nextPage() {
+    if(_currentPage < _workouts.length - 1) {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 500), 
+        curve: Curves.easeOutCubic
+      );
+    }
+  }
+
+  void _prevPage() {
+    if(_currentPage > 0) {
+      _pageController.previousPage(
+        duration: const Duration(milliseconds: 500), 
+        curve: Curves.easeOutCubic
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +104,7 @@ class HomeScreen extends StatelessWidget {
                         FadeInDown(
                           child: Text(
                             "Hello, Fighter",
-                            style: GoogleFonts.outfit(
+                            style: GoogleFonts.poppins(
                               fontSize: 16,
                               color: Colors.white70,
                             ),
@@ -49,7 +114,7 @@ class HomeScreen extends StatelessWidget {
                           delay: const Duration(milliseconds: 200),
                           child: Text(
                             "Ready to Workout?",
-                            style: GoogleFonts.outfit(
+                            style: GoogleFonts.poppins(
                               fontSize: 26,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
@@ -75,59 +140,48 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
 
-              // Search Bar
-              FadeInLeft(
-                delay: const Duration(milliseconds: 600),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    height: 55,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.05),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.white10),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.search, color: Colors.white38),
-                        const SizedBox(width: 15),
-                        Text(
-                          "Search workout...",
-                          style: GoogleFonts.outfit(color: Colors.white38),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 30),
-
-              // Categories Title
+              // Categories Title with Nav buttons
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: FadeInLeft(
-                  delay: const Duration(milliseconds: 800),
+                  delay: const Duration(milliseconds: 600),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         "Featured Workouts",
-                        style: GoogleFonts.outfit(
+                        style: GoogleFonts.poppins(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
                       ),
-                      Text(
-                        "See All",
-                        style: GoogleFonts.outfit(
-                          fontSize: 14,
-                          color: const Color(0xFFFF0040),
-                        ),
+                      
+                      // Navigation Buttons
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: _prevPage,
+                            icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
+                            color: Colors.white70,
+                            style: IconButton.styleFrom(
+                              backgroundColor: Colors.white10,
+                              padding: const EdgeInsets.all(12)
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          IconButton(
+                            onPressed: _nextPage,
+                            icon: const Icon(Icons.arrow_forward_ios_rounded, size: 20),
+                            color: const Color(0xFFFF0040),
+                            style: IconButton.styleFrom(
+                              backgroundColor: const Color(0xFFFF0040).withOpacity(0.1),
+                              padding: const EdgeInsets.all(12)
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -136,43 +190,32 @@ class HomeScreen extends StatelessWidget {
 
               const SizedBox(height: 20),
 
-              // Categories List
+              // Carousel PageView
               SizedBox(
-                height: 320,
-                child: ListView(
+                height: 400,
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: _workouts.length,
                   physics: const BouncingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.only(left: 24),
-                  children: [
-                    _buildWorkoutCard(
-                      title: "Full Body\nDestroyer",
-                      subtitle: "45 Min • High Intensity",
-                      imageAsset: "assets/background.jpg", // Using background as placeholder
-                      delay: 1000,
-                    ),
-                    _buildWorkoutCard(
-                      title: "Cardio\nBlast",
-                      subtitle: "30 Min • Endurance",
-                       imageAsset: "assets/background.jpg",
-                      delay: 1200,
-                      color: Colors.blueAccent, 
-                    ),
-                     _buildWorkoutCard(
-                      title: "Strength\nMaster",
-                      subtitle: "60 Min • Power",
-                       imageAsset: "assets/background.jpg",
-                      delay: 1400,
-                      color: Colors.orangeAccent
-                    ),
-                  ],
+                  onPageChanged: (int index) {
+                    setState(() {
+                      _currentPage = index;
+                    });
+                  },
+                  itemBuilder: (context, index) {
+                    return _buildWorkoutCard(
+                      index: index,
+                      data: _workouts[index],
+                    );
+                  },
                 ),
               ),
 
               const Spacer(),
               
-              // Bottom Nav (Visual Only)
+              // Bottom Nav
               FadeInUp(
-                delay: const Duration(milliseconds: 1600),
+                delay: const Duration(milliseconds: 800),
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
                   padding: const EdgeInsets.all(15),
@@ -199,22 +242,24 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildWorkoutCard({
-    required String title,
-    required String subtitle, 
-    required String imageAsset,
-    required int delay,
-    Color color = const Color(0xFFFF0040),
-  }) {
-    return FadeInRight(
-      delay: Duration(milliseconds: delay),
+  Widget _buildWorkoutCard({required int index, required Map<String, dynamic> data}) {
+    // Calculate scale for carousel effect
+    double scale = 1.0;
+    // We can use a simple logic here or just rely on viewportFraction for spacing.
+    // For a 3D effect, we'd wrap in AnimatedBuilder with pageController, but for simplicity
+    // and performance, let's stick to a clean card design first.
+    
+    return AnimatedPadding(
+      duration: const Duration(milliseconds: 300),
+      padding: EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: _currentPage == index ? 0 : 30, // transform effect
+      ),
       child: Container(
-        width: 240,
-        margin: const EdgeInsets.only(right: 20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
           image: DecorationImage(
-            image: AssetImage(imageAsset),
+            image: AssetImage(data['image']),
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
               Colors.black45,
@@ -223,7 +268,7 @@ class HomeScreen extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: color.withOpacity(0.3),
+              color: (data['color'] as Color).withOpacity(0.4),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -237,7 +282,7 @@ class HomeScreen extends StatelessWidget {
               end: Alignment.bottomCenter,
               colors: [
                 Colors.transparent,
-                Colors.black.withOpacity(0.8),
+                Colors.black.withOpacity(0.9),
               ],
             ),
           ),
@@ -249,12 +294,12 @@ class HomeScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: color,
+                  color: data['color'],
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
                   "Pro",
-                  style: GoogleFonts.outfit(
+                  style: GoogleFonts.poppins(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 12,
@@ -263,35 +308,43 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                title,
-                style: GoogleFonts.outfit(
+                data['title'],
+                style: GoogleFonts.poppins(
                   color: Colors.white,
-                  fontSize: 24,
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
                   height: 1.1,
                 ),
               ),
               const SizedBox(height: 5),
               Text(
-                subtitle,
-                style: GoogleFonts.outfit(
+                data['subtitle'],
+                style: GoogleFonts.poppins(
                   color: Colors.white70,
-                  fontSize: 14,
+                  fontSize: 16,
                 ),
               ),
-               const SizedBox(height: 15),
+               const SizedBox(height: 20),
                // Action Button
                Row(
                  children: [
                    Container(
-                     height: 40,
-                     width: 40,
+                     height: 50,
+                     width: 50,
                      decoration: BoxDecoration(
                        color: Colors.white24,
                        shape: BoxShape.circle,
                      ),
-                     child: const Icon(Icons.play_arrow_rounded, color: Colors.white),
+                     child: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 30),
                    ),
+                   const SizedBox(width: 15),
+                   Text(
+                      "Start Now",
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                   )
                  ],
                )
             ],
