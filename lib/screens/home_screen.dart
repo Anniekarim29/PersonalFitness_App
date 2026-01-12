@@ -17,25 +17,25 @@ class _HomeScreenState extends State<HomeScreen> {
     {
       "title": "Full Body\nDestroyer",
       "subtitle": "45 Min • High Intensity",
-      "image": "assets/background.jpg",
+      "image": "assets/full body destroyer.jpeg",
       "color": const Color(0xFFFF0040),
     },
     {
       "title": "Cardio\nBlast",
       "subtitle": "30 Min • Endurance",
-      "image": "assets/background.jpg",
+      "image": "assets/cardio blast.jpeg",
       "color": Colors.blueAccent,
     },
     {
       "title": "Strength\nMaster",
       "subtitle": "60 Min • Power",
-      "image": "assets/background.jpg",
+      "image": "assets/strength.jpeg",
       "color": Colors.orangeAccent,
     },
     {
       "title": "Yoga\nFlow",
       "subtitle": "40 Min • Flexibility",
-      "image": "assets/background.jpg",
+      "image": "assets/youga flow.jpeg",
       "color": Colors.purpleAccent,
     },
   ];
