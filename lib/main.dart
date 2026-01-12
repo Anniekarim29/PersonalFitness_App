@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fitness_app/screens/login_screen.dart';
