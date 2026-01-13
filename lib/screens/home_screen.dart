@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:fitness_app/screens/explore_screen.dart';
+import 'package:fitness_app/screens/analytics_screen.dart';
+import 'package:fitness_app/screens/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,6 +15,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late PageController _pageController;
   int _currentPage = 0;
+  int _currentTab = 0;
 
   final List<Map<String, dynamic>> _workouts = [
     {
@@ -74,24 +78,54 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.black,
-              Color(0xFF1A1A1A),
-              Color(0xFF2C030B),
-              Colors.black,
-            ],
-            stops: [0.0, 0.4, 0.7, 1.0],
+      body: Stack(
+        children: [
+          _buildBody(),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: _buildBottomBar(),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBody() {
+    switch (_currentTab) {
+      case 0:
+        return _buildHomeContent();
+      case 1:
+        return const ExploreScreen();
+      case 2:
+        return const AnalyticsScreen();
+      case 3:
+        return const ProfileScreen();
+      default:
+        return _buildHomeContent();
+    }
+  }
+
+  Widget _buildHomeContent() {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.black,
+            Color(0xFF1A1A1A),
+            Color(0xFF2C030B),
+            Colors.black,
+          ],
+          stops: [0.0, 0.4, 0.7, 1.0],
         ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
+      ),
+      child: SafeArea(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Header
@@ -266,35 +300,51 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-
-              const SizedBox(height: 20),
               
-              // Bottom Nav
-              FadeInUp(
-                delay: const Duration(milliseconds: 800),
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-                  padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.05),
-                    borderRadius: BorderRadius.circular(30),
-                    border: Border.all(color: Colors.white10),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: const [
-                       Icon(Icons.home_filled, color: Color(0xFFFF0040), size: 30),
-                       Icon(Icons.explore_outlined, color: Colors.white38, size: 30),
-                       Icon(Icons.analytics_outlined, color: Colors.white38, size: 30),
-                       Icon(Icons.person_outline, color: Colors.white38, size: 30),
-                    ],
-                  ),
-                ),
-              ),
+              // Extra space for bottom nav
+              const SizedBox(height: 100),
             ],
-            ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildBottomBar() {
+    return FadeInUp(
+      delay: const Duration(milliseconds: 800),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.9),
+          borderRadius: BorderRadius.circular(30),
+          border: Border.all(color: Colors.white10),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+             _buildNavItem(Icons.home_filled, 0),
+             _buildNavItem(Icons.explore_outlined, 1),
+             _buildNavItem(Icons.analytics_outlined, 2),
+             _buildNavItem(Icons.person_outline, 3),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavItem(IconData icon, int index) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _currentTab = index;
+        });
+      },
+      child: Icon(
+        icon, 
+        color: _currentTab == index ? const Color(0xFFFF0040) : Colors.white38, 
+        size: 30
       ),
     );
   }
@@ -391,7 +441,7 @@ class _HomeScreenState extends State<HomeScreen> {
                      decoration: BoxDecoration(
                        color: Colors.white24,
                        shape: BoxShape.circle,
-                     ),
+                       ),
                      child: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 30),
                    ),
                    const SizedBox(width: 15),
